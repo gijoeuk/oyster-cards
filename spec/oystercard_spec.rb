@@ -14,4 +14,12 @@ describe OysterCard do
     # Assert
     expect(card.top_up(amount)).to eq (card.balance)
   end
+
+  it 'limits balance to a maximum of £90' do
+    card = OysterCard.new
+    card.top_up(90)
+    amount = 1
+    expect{card.top_up(amount)}.to raise_error "The maximum balance has already been reached"
+  end
+
 end
