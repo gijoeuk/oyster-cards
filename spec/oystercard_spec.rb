@@ -25,25 +25,25 @@ describe OysterCard do
     expect{card.top_up(amount)}.to raise_error "The maximum balance has already been reached"
   end
 
-describe '#pay_fare' do
-  it 'deducts fare from balance' do
+describe '#deduct' do
+  it 'deducts amount from balance' do
     #Arrange
     card = OysterCard.new
-    fare = 4
+    amount = 4
     # Action
     card.top_up(10)
     # Assert
-    expect(card.pay_fare(fare)).to eq (card.balance - fare)
+    expect(card.deduct(amount)).to eq (card.balance - amount)
   end
 end
 
   it 'returns error if journey would reduce balance beyond 0' do
   # Arrange
   card = OysterCard.new
-  fare = 4
+  amount = 4
   # Action
   card.top_up(1)
   # Assert
-  expect{card.pay_fare(fare)}.to raise_error "You broke"
+  expect{card.deduct(amount)}.to raise_error "You broke"
   end
 end

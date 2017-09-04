@@ -14,9 +14,9 @@ attr_reader :balance
     end
   end
 
-  def pay_fare(fare)
-    if (@balance - fare) >= 0
-      @balance - fare
+  def deduct(amount)
+    if (@balance - amount) >= 0
+      @balance - amount
     else
       fail "You broke"
     end
