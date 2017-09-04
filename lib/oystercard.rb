@@ -13,4 +13,12 @@ attr_reader :balance
       fail "The maximum balance has already been reached"
     end
   end
+
+  def pay_fare(fare)
+    if (@balance - fare) >= 0
+      @balance - fare
+    else
+      fail "You broke"
+    end
+  end
 end
