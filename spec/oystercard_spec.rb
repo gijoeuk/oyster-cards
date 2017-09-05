@@ -6,10 +6,6 @@ require './lib/station.rb'
       card = OysterCard.new
       expect(card.balance).to eq 0
     end
-    it 'tests that default in_journey status is false' do
-      card = OysterCard.new
-      expect(card.in_journey).to eq false
-    end
     it 'tests that default journey_start equals nil' do
       card = OysterCard.new
       expect(card.journey_start).to eq nil
@@ -53,11 +49,26 @@ require './lib/station.rb'
       amount = ((OysterCard::MAXIMUMBALANCE)-(card.balance))
       card.top_up(amount)
       card.touch_in(station)
-      expect(card.in_journey).to eq true
+      expect(card.in_journey?).to eq true
     end
     it 'checks balance and updates in_journey to false if less than £1 on card' do
       card = OysterCard.new
       expect{card.touch_in(station)}.to raise_error("Insufficient funds")
+    end
+  end
+
+  describe '#in_journey' do
+    let(:station){ double :station }
+    it 'returns true if in_journey' do
+      card = OysterCard.new
+      amount = ((OysterCard::MAXIMUMBALANCE)-(card.balance))
+      card.top_up(amount)
+      card.touch_in(station)
+      expect(card.in_journey?).to be(true)
+    end
+    it 'returns false if not in_journey' do
+      card = OysterCard.new
+      expect(card.in_journey?).to be(false)
     end
   end
 
@@ -66,7 +77,7 @@ require './lib/station.rb'
     it 'updates in_journey to false' do
       card = OysterCard.new
       card.touch_out
-      expect(card.in_journey).to eq false
+      expect(card.in_journey?).to eq false
     end
     it 'reduces balance by minimum fare' do
       card = OysterCard.new
@@ -75,7 +86,7 @@ require './lib/station.rb'
       card.touch_in(station)
       expect{card.touch_out}.to change{card.balance}.by(-OysterCard:: MINIMUMFAIR)
     end
-
+    #it 'returns journey_start to nil' do
     # returns journey_start to nil
   end
 
