@@ -32,8 +32,7 @@ describe '#deduct' do
     # Action
     card.top_up(10)
     # Assert
-
-    expect(card.deduct(amount)).to eq (card.balance)
+    expect{card.send(:deduct, amount)}.to change{card.balance}.by(-amount)
   end
 end
 
@@ -55,6 +54,12 @@ describe '#touch_in' do
       card = OysterCard.new
       card.touch_out
       expect(card.in_journey).to eq false
+    end
+    it 'reduces balance by minimum fare' do
+      card = OysterCard.new
+      card.top_up(10)
+      card.touch_in
+      expect{card.touch_out}.to change{card.balance}.by(-OysterCard:: MINIMUMFAIR)
     end
   end
 end
