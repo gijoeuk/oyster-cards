@@ -11,7 +11,7 @@ attr_accessor :balance, :in_journey
   end
 
   def top_up(amount)
-    raise "The maximum balance has already been reached" if (@balance + amount) >= MAXIMUMBALANCE
+    raise "The maximum balance has already been reached" if (balance + amount) > MAXIMUMBALANCE
     @balance += amount
   end
 

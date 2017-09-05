@@ -6,31 +6,32 @@ describe OysterCard do
     expect(card.balance).to eq 0
   end
 
+describe '#top_up' do
   it 'accepts a number as an argument and increases balance by that much' do
     # Arrange
     card = OysterCard.new
-    amount = 10
+    amount = ((OysterCard::MAXIMUMBALANCE)-(card.balance))
     # Action
     # Assert
-    expect(card.top_up(amount)).to eq (card.balance)
+    expect{card.top_up(amount)}.to change{card.balance}.by(amount)
   end
-
   it 'limits balance to a maximum of £90' do
     # Arrange
     card = OysterCard.new
-    amount = 91
+    amount = (OysterCard::MAXIMUMBALANCE)+1
     # Action
     # Assert
     expect{card.top_up(amount)}.to raise_error "The maximum balance has already been reached"
   end
+end
 
 describe '#deduct' do
   it 'deducts amount from balance' do
     #Arrange
     card = OysterCard.new
-    amount = 4
+    amount = ((OysterCard::MAXIMUMBALANCE)-(card.balance))
     # Action
-    card.top_up(10)
+    card.top_up(amount)
     # Assert
     expect{card.send(:deduct, amount)}.to change{card.balance}.by(-amount)
   end
@@ -39,7 +40,8 @@ end
 describe '#touch_in' do
   it 'checks balance and if enough money,updates in_journey to true' do
       card = OysterCard.new
-      card.top_up(5)
+      amount = ((OysterCard::MAXIMUMBALANCE)-(card.balance))
+      card.top_up(amount)
       card.touch_in
       expect(card.in_journey).to eq true
     end
@@ -57,7 +59,8 @@ describe '#touch_in' do
     end
     it 'reduces balance by minimum fare' do
       card = OysterCard.new
-      card.top_up(10)
+      amount = ((OysterCard::MAXIMUMBALANCE)-(card.balance))
+      card.top_up(amount)
       card.touch_in
       expect{card.touch_out}.to change{card.balance}.by(-OysterCard:: MINIMUMFAIR)
     end
