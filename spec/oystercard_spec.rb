@@ -78,7 +78,7 @@ require './lib/station.rb'
     let(:station){ double :station }
     it 'updates in_journey to false' do
       card = OysterCard.new
-      card.touch_out
+      card.touch_out(station)
       expect(card.in_journey?).to be(false)
     end
     it 'reduces balance by minimum fare' do
@@ -86,7 +86,13 @@ require './lib/station.rb'
       amount = ((OysterCard::MAXIMUMBALANCE)-(card.balance))
       card.top_up(amount)
       card.touch_in(station)
-      expect{card.touch_out}.to change{card.balance}.by(-OysterCard:: MINIMUMFAIR)
+      expect{card.touch_out(station)}.to change{card.balance}.by(-OysterCard:: MINIMUMFAIR)
+    end
+    it 'pushes end station to journey_history' do
+      card = OysterCard.new
+      amount = ((OysterCard::MAXIMUMBALANCE)-(card.balance))
+      card.top_up(amount)
+      expect{card.touch_out(station)}.to change{card.journey_history.count}.by(1)
     end
   end
 

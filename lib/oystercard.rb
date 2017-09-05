@@ -30,8 +30,9 @@ attr_reader :balance, :journey_start, :journey_history
     @journey_history << station
   end
 
-  def touch_out
+  def touch_out(station)
     deduct(MINIMUMFAIR)
+    @journey_history << station
     @journey_start = nil
   end
 
