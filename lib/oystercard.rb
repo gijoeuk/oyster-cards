@@ -1,9 +1,10 @@
 class OysterCard
 
-attr_reader :balance
+attr_reader :balance, :in_journey
 
   def initialize
     @balance = 0
+    @in_journey =  false
   end
 
   def top_up(amount)
@@ -20,5 +21,13 @@ attr_reader :balance
     else
       fail "You broke"
     end
+  end
+
+  def touch_in
+    @in_journey = true
+  end
+
+  def touch_out
+    @in_journey = false
   end
 end

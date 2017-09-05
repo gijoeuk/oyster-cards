@@ -38,12 +38,26 @@ describe '#deduct' do
 end
 
   it 'returns error if journey would reduce balance beyond 0' do
-  # Arrange
-  card = OysterCard.new
-  amount = 4
-  # Action
-  card.top_up(1)
-  # Assert
-  expect{card.deduct(amount)}.to raise_error "You broke"
+    # Arrange
+    card = OysterCard.new
+    amount = 4
+    # Action
+    card.top_up(1)
+    # Assert
+    expect{card.deduct(amount)}.to raise_error "You broke"
+  end
+
+  describe '#in_journey' do
+    it 'returns true when method touch_in is used' do
+      card = OysterCard.new
+      card.touch_in
+      expect(card.in_journey).to eq true
+    end
+    it 'returns false when method touch_out is used' do
+      card = OysterCard.new
+      card.touch_in
+      card.touch_out
+      expect(card.in_journey).to eq false
+    end
   end
 end
