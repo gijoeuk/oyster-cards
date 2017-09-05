@@ -3,11 +3,12 @@ class OysterCard
 MAXIMUMBALANCE = 90
 MINIMUMFAIR = 1
 
-attr_reader :balance, :journey_start
+attr_reader :balance, :journey_start, :journey_history
 
   def initialize
     @balance = 0
     @journey_start = nil
+    @journey_history = []
   end
 
   def in_journey?
@@ -26,6 +27,7 @@ attr_reader :balance, :journey_start
   def touch_in(station)
     raise "Insufficient funds" if @balance < MINIMUMFAIR
     @journey_start = station
+    @journey_history << station
   end
 
   def touch_out
