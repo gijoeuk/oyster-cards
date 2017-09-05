@@ -1,6 +1,6 @@
 class OysterCard
 
-attr_reader :balance, :in_journey
+attr_accessor :balance, :in_journey
 
   def initialize
     @balance = 0
@@ -8,22 +8,16 @@ attr_reader :balance, :in_journey
   end
 
   def top_up(amount)
-    if (@balance + amount) <= 90
-      @balance += amount
-    else
-      fail "The maximum balance has already been reached"
-    end
+    raise "The maximum balance has already been reached" if (@balance + amount) >= 90
+    @balance += amount
   end
 
   def deduct(amount)
-    if (@balance - amount) >= 0
-      @balance - amount
-    else
-      fail "You broke"
-    end
+      @balance -= amount
   end
 
   def touch_in
+    raise "Insufficient funds" if @balance < 1
     @in_journey = true
   end
 
