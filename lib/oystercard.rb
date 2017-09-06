@@ -8,12 +8,11 @@ attr_reader :balance, :journey_history, :journeys, :journey_start
   def initialize
     @balance = 0
     @journey_start = nil
-    @journey_history = []
-    @journeys = Hash.new
+    @journey_history = Hash.new
   end
 
   def in_journey?
-    !!@journey_start 
+    !!@journey_start
   end
 
   def top_up(amount)
@@ -28,16 +27,13 @@ attr_reader :balance, :journey_history, :journeys, :journey_start
   def touch_in(station)
     raise "Insufficient funds" if balance < MINIMUMFAIR
     @journey_start = station
-    @journey_history << station
+    @journey_history.store(:entry_station, station)
   end
 
   def touch_out(station)
     deduct(MINIMUMFAIR)
     @journey_start = nil
-    @journey_history << station
-    #@journeys < journey_history.pop(2).map { |a,b| a=>key, b=>value}
+    @journey_history.store(:exit_station, station)
   end
-
   private :deduct
-
 end
