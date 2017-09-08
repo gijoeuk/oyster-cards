@@ -1,8 +1,11 @@
 require './lib/oystercard.rb'
 
+
   describe OysterCard do
     let(:station){ double :station }
     let(:card){described_class.new}
+    let(:journey){Journey.new}
+
     describe '#initialize' do
       it 'tests that new cards have a balance of 0' do
         expect(card.balance).to eq 0
@@ -23,10 +26,14 @@ require './lib/oystercard.rb'
         amount = ((OysterCard::MAXIMUMBALANCE)-(card.balance))
         card.top_up(amount)
         card.touch_in(station)
-        expect(card.in_journey?).to be(true)
+        expect(card.journey.in_journey).to be(true)
       end
       it 'returns false if not in_journey' do
-        expect(card.in_journey?).to be(false)
+        amount = ((OysterCard::MAXIMUMBALANCE)-(card.balance))
+        card.top_up(amount)
+        card.touch_in(station)
+        card.touch_out(station)
+        expect(card.journey.in_journey).to be(false)
       end
     end
 
@@ -50,13 +57,13 @@ require './lib/oystercard.rb'
     end
 
     describe '#touch_in' do
-      it 'checks balance and if enough money,updates in_journey to true' do
+      it 'checks balance and if enough money, updates in_journey to true' do
         amount = ((OysterCard::MAXIMUMBALANCE)-(card.balance))
         card.top_up(amount)
         card.touch_in(station)
-        expect(card.in_journey?).to be(true)
+        expect(card.journey.in_journey).to be(true)
       end
-      it 'checks balance and updates in_journey to false if less than £1 on card' do
+      it 'checks balance and raises error if insufficient funds' do
         expect{card.touch_in(station)}.to raise_error("Insufficient funds")
       end
       it 'pushes start station to journey_history' do
@@ -68,9 +75,11 @@ require './lib/oystercard.rb'
 
     describe '#touch_out' do
       it 'when user touches out it updates in_journey to false' do
-        card = OysterCard.new
+        amount = ((OysterCard::MAXIMUMBALANCE)-(card.balance))
+        card.top_up(amount)
+        card.touch_in(station)
         card.touch_out(station)
-        expect(card.in_journey?).to be(false)
+        expect(card.journey.in_journey).to be(false)
       end
       it 'reduces balance by minimum fare' do
         amount = ((OysterCard::MAXIMUMBALANCE)-(card.balance))
@@ -81,6 +90,7 @@ require './lib/oystercard.rb'
       it 'pushes exit station to journey_history' do
         amount = ((OysterCard::MAXIMUMBALANCE)-(card.balance))
         card.top_up(amount)
+        card.touch_in(station)
         expect{card.touch_out(station)}.to change{card.journey_history.count}.by(1)
       end
     end
